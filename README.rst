@@ -1,4 +1,4 @@
-LabelImg
+LabelImg_OBB
 ========
 
 .. image:: https://img.shields.io/pypi/v/labelimg.svg
@@ -8,6 +8,7 @@ LabelImg
         :target: https://travis-ci.org/tzutalin/labelImg
 
 LabelImg is a graphical image annotation tool.
+LabelImg_OBB is a fork that adds the oriented bounding boxes (OBB) feature.
 
 It is written in Python and uses Qt for its graphical interface.
 
@@ -179,7 +180,7 @@ Steps (PascalVOC)
 3. Click 'Open Dir'
 4. Click 'Create RectBox'
 5. Click and release left mouse to select a region to annotate the rect
-   box
+   box and set its orientation
 6. You can use right mouse to drag the rect box to copy or move it
 
 The annotation will be saved to the folder you specify.
