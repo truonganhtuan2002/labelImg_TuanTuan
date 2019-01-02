@@ -179,9 +179,9 @@ Steps (PascalVOC)
 2. Click 'Change default saved annotation folder' in Menu/File
 3. Click 'Open Dir'
 4. Click 'Create RectBox'
-5. Click and release left mouse to select a region to annotate the rect
+5. Click and release left mouse button to select a region to annotate the rect
    box and set its orientation
-6. You can use right mouse to drag the rect box to copy or move it
+6. You can use right mouse button to drag the rect box to copy or move it. To rotate drag using right mouse button from box vertices (red dots).
 
 The annotation will be saved to the folder you specify.
 
@@ -241,7 +241,7 @@ Hotkeys
 +------------+--------------------------------------------+
 | Ctrl--     | Zoom out                                   |
 +------------+--------------------------------------------+
-| ↑→↓←       | Keyboard arrows to move selected rect box  |
+|            | Keyboard arrows to move selected rect box  |
 +------------+--------------------------------------------+
 
 How to contribute

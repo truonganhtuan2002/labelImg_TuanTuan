@@ -251,7 +251,31 @@ class Shape(object):
             else: # Height is point[1] to point[2]
                 self.angle = math.degrees( math.atan2( math.fabs(self.points[1].y()-self.points[2].y()), 
                                                        math.fabs(self.points[1].x()-self.points[2].x()) ) )
-            
+    
+    def updatePointsFromOBBInfo(self, canvas_width, canvas_height):
+        p = []
+        p.append(self.origin[0] + self.height*math.cos(math.radians(self.angle))/2.0 + self.width*math.cos(math.radians(90+self.angle))/2.0)
+        p.append(self.origin[1] - self.height*math.sin(math.radians(self.angle))/2.0 - self.width*math.sin(math.radians(90+self.angle))/2.0)
+        
+        p.append(self.origin[0] - self.height*math.cos(math.radians(self.angle))/2.0 + self.width*math.cos(math.radians(90+self.angle))/2.0)
+        p.append(self.origin[1] + self.height*math.sin(math.radians(self.angle))/2.0 - self.width*math.sin(math.radians(90+self.angle))/2.0)
+        
+        p.append(self.origin[0] - self.height*math.cos(math.radians(self.angle))/2.0 - self.width*math.cos(math.radians(90+self.angle))/2.0)
+        p.append(self.origin[1] + self.height*math.sin(math.radians(self.angle))/2.0 + self.width*math.sin(math.radians(90+self.angle))/2.0)
+        
+        p.append(self.origin[0] + self.height*math.cos(math.radians(self.angle))/2.0 - self.width*math.cos(math.radians(90+self.angle))/2.0)
+        p.append(self.origin[1] - self.height*math.sin(math.radians(self.angle))/2.0 + self.width*math.sin(math.radians(90+self.angle))/2.0)
+        
+        # Make sure that all vertices are inside the canvas area
+        if (all([ (p[i]>0 and p[i]<canvas_width) for i in range(0,8,2) ]) and all([ (p[i]>0 and p[i]<canvas_height) for i in range(1,8,2) ])):
+            self.addPoint(QPointF(p[0], p[1]))
+            self.addPoint(QPointF(p[2], p[3]))
+            self.addPoint(QPointF(p[4], p[5]))
+            self.addPoint(QPointF(p[6], p[7]))
+            return True
+        else:
+            return False
+        
     def highlightVertex(self, i, action):
         self._highlightIndex = i
         self._highlightMode = action

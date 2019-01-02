@@ -195,7 +195,7 @@ class Canvas(QWidget):
                 self.hVertex, self.hShape = index, shape
                 shape.highlightVertex(index, shape.MOVE_VERTEX)
                 self.overrideCursor(CURSOR_POINT)
-                self.setToolTip("Click & drag to move point")
+                self.setToolTip("Left Click & Drag point to move. Right Click & Drag points to rotate.")
                 self.setStatusTip(self.toolTip())
                 self.update()
                 break
@@ -204,7 +204,7 @@ class Canvas(QWidget):
                     self.hShape.highlightClear()
                 self.hVertex, self.hShape = None, shape
                 self.setToolTip(
-                    "Click & drag to move shape '%s'" % shape.label)
+                    "Click & Drag to move shape '%s'. Right Click points to rotate." % shape.label)
                 self.setStatusTip(self.toolTip())
                 self.overrideCursor(CURSOR_GRAB)
                 self.update()

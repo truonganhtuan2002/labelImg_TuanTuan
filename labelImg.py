@@ -42,6 +42,7 @@ from libs.toolBar import ToolBar
 from libs.pascal_voc_io import PascalVocReader
 from libs.pascal_voc_io import XML_EXT
 from libs.yolo_io import YoloReader
+from libs.yolo_obb_io import YoloOBBReader
 from libs.yolo_io import TXT_EXT
 from libs.ustr import ustr
 from libs.version import __version__
@@ -96,8 +97,9 @@ class MainWindow(QMainWindow, WindowMixin):
 
         # Save as Pascal voc xml
         self.defaultSaveDir = defaultSaveDir
-        self.usingPascalVocFormat = True
+        self.usingPascalVocFormat = False
         self.usingYoloFormat = False
+        self.usingYoloOBBFormat = True # Default Format
 
         # For loading all image under a directory
         self.mImgList = []
@@ -233,8 +235,8 @@ class MainWindow(QMainWindow, WindowMixin):
         save = action(getStr('save'), self.saveFile,
                       'Ctrl+S', 'save', getStr('saveDetail'), enabled=False)
 
-        save_format = action('&PascalVOC', self.change_format,
-                      'Ctrl+', 'format_voc', getStr('changeSaveFormat'), enabled=True)
+        save_format = action('&YOLO_OBB', self.change_format,
+                      'Ctrl+', 'format_yolo_obb', getStr('changeSaveFormat'), enabled=True)
 
         saveAs = action(getStr('saveAs'), self.saveFileAs,
                         'Ctrl+Shift+S', 'save-as', getStr('saveAsDetail'), enabled=False)
@@ -270,6 +272,7 @@ class MainWindow(QMainWindow, WindowMixin):
                          'Ctrl+A', 'hide', getStr('showAllBoxDetail'),
                          enabled=False)
 
+        showQuickInstr = action(getStr('quickinstr'), self.showQuickInstrDialog, None, 'help', getStr('quickinstr'))
         help = action(getStr('tutorial'), self.showTutorialDialog, None, 'help', getStr('tutorialDetail'))
         showInfo = action(getStr('info'), self.showInfoDialog, None, 'help', getStr('info'))
 
@@ -381,7 +384,7 @@ class MainWindow(QMainWindow, WindowMixin):
 
         addActions(self.menus.file,
                    (open, opendir, changeSavedir, openAnnotation, self.menus.recentFiles, save, save_format, saveAs, close, resetAll, quit))
-        addActions(self.menus.help, (help, showInfo))
+        addActions(self.menus.help, (showQuickInstr, help, showInfo))
         addActions(self.menus.view, (
             self.autoSaving,
             self.singleClassMode,
@@ -504,6 +507,7 @@ class MainWindow(QMainWindow, WindowMixin):
             self.actions.save_format.setIcon(newIcon("format_voc"))
             self.usingPascalVocFormat = True
             self.usingYoloFormat = False
+            self.usingYoloOBBFormat = False
             LabelFile.suffix = XML_EXT
 
         elif save_format == FORMAT_YOLO:
@@ -511,11 +515,21 @@ class MainWindow(QMainWindow, WindowMixin):
             self.actions.save_format.setIcon(newIcon("format_yolo"))
             self.usingPascalVocFormat = False
             self.usingYoloFormat = True
+            self.usingYoloOBBFormat = False
+            LabelFile.suffix = TXT_EXT
+            
+        elif save_format == FORMAT_YOLO_OBB:
+            self.actions.save_format.setText(FORMAT_YOLO_OBB)
+            self.actions.save_format.setIcon(newIcon("format_yolo_obb"))
+            self.usingPascalVocFormat = False
+            self.usingYoloFormat = False
+            self.usingYoloOBBFormat = True
             LabelFile.suffix = TXT_EXT
 
     def change_format(self):
         if self.usingPascalVocFormat: self.set_format(FORMAT_YOLO)
-        elif self.usingYoloFormat: self.set_format(FORMAT_PASCALVOC)
+        elif self.usingYoloFormat: self.set_format(FORMAT_YOLO_OBB)
+        elif self.usingYoloOBBFormat: self.set_format(FORMAT_PASCALVOC)
 
     def noShapes(self):
         return not self.itemsToShapes
@@ -616,6 +630,10 @@ class MainWindow(QMainWindow, WindowMixin):
             return ['open', '-a', 'Safari']
 
     ## Callbacks ##
+    def showQuickInstrDialog(self):
+        msg = "Left Click & Drag to create object. Left Click to move it. Left Click points to resize it. Right Click points to rotate it."
+        QMessageBox.information(self, u'Quick Instructions', msg)
+        
     def showTutorialDialog(self):
         subprocess.Popen(self.screencastViewer + [self.screencast])
 
@@ -785,6 +803,37 @@ class MainWindow(QMainWindow, WindowMixin):
             self.addLabel(shape)
 
         self.canvas.loadShapes(s)
+        
+    def loadOBBLabels(self, shapes):
+        s = []
+        for label, centre_x, centre_y, height, width, angle, line_color, fill_color, difficult in shapes:
+            shape = Shape(label=label)
+
+            # If shape origin is within boundaries
+            if centre_x > 0 and centre_x < self.canvas.pixmap.width() and centre_y > 0 and centre_y < self.canvas.pixmap.height():
+                shape.origin = [centre_x, centre_y]
+                shape.height = height
+                shape.width = width
+                shape.angle = angle
+                shape.difficult = difficult
+                shape.close()
+                if (shape.updatePointsFromOBBInfo(self.canvas.pixmap.width(), self.canvas.pixmap.height())):
+                    self.setDirty()
+                    s.append(shape)
+
+            if line_color:
+                shape.line_color = QColor(*line_color)
+            else:
+                shape.line_color = generateColorByText(label)
+
+            if fill_color:
+                shape.fill_color = QColor(*fill_color)
+            else:
+                shape.fill_color = generateColorByText(label)
+
+            self.addLabel(shape)
+
+        self.canvas.loadShapes(s)
 
     def saveLabels(self, annotationFilePath):
         annotationFilePath = ustr(annotationFilePath)
@@ -800,6 +849,17 @@ class MainWindow(QMainWindow, WindowMixin):
                        # add chris
                         difficult = s.difficult)
 
+        def format_obb_shape(s):
+            return dict(label=s.label,
+                        line_color=s.line_color.getRgb(),
+                        fill_color=s.fill_color.getRgb(),
+                        centre_x_y=s.origin,
+                        height=s.height,
+                        width=s.width,
+                        angle=s.angle,
+                       # add chris
+                        difficult = s.difficult)
+
         shapes = [format_shape(shape) for shape in self.canvas.shapes]
         # Can add differrent annotation formats here
         try:
@@ -812,6 +872,12 @@ class MainWindow(QMainWindow, WindowMixin):
                 if annotationFilePath[-4:].lower() != ".txt":
                     annotationFilePath += TXT_EXT
                 self.labelFile.saveYoloFormat(annotationFilePath, shapes, self.filePath, self.imageData, self.labelHist,
+                                                   self.lineColor.getRgb(), self.fillColor.getRgb())
+            elif self.usingYoloOBBFormat is True:
+                shapes = [format_obb_shape(shape) for shape in self.canvas.shapes]
+                if annotationFilePath[-4:].lower() != ".txt":
+                    annotationFilePath += TXT_EXT
+                self.labelFile.saveYoloOBBFormat(annotationFilePath, shapes, self.filePath, self.imageData, self.labelHist,
                                                    self.lineColor.getRgb(), self.fillColor.getRgb())
             else:
                 self.labelFile.save(annotationFilePath, shapes, self.filePath, self.imageData,
@@ -1036,19 +1102,29 @@ class MainWindow(QMainWindow, WindowMixin):
                 txtPath = os.path.join(self.defaultSaveDir, basename + TXT_EXT)
 
                 """Annotation file priority:
-                PascalXML > YOLO
+                PascalXML > YOLO_OBB > YOLO
                 """
                 if os.path.isfile(xmlPath):
                     self.loadPascalXMLByFilename(xmlPath)
                 elif os.path.isfile(txtPath):
-                    self.loadYOLOTXTByFilename(txtPath)
+                    with open(txtPath) as f:
+                        first_line = f.readline()
+                        if (first_line == "YOLO_OBB"):
+                            self.loadYOLOTOBBXTByFilename(txtPath)
+                        else:
+                            self.loadYOLOTXTByFilename(txtPath)
             else:
                 xmlPath = os.path.splitext(filePath)[0] + XML_EXT
                 txtPath = os.path.splitext(filePath)[0] + TXT_EXT
                 if os.path.isfile(xmlPath):
                     self.loadPascalXMLByFilename(xmlPath)
                 elif os.path.isfile(txtPath):
-                    self.loadYOLOTXTByFilename(txtPath)
+                    with open(txtPath) as f:
+                        first_line = f.readline()
+                        if (first_line == "YOLO_OBB\n"):
+                            self.loadYOLOTOBBXTByFilename(txtPath)
+                        else:
+                            self.loadYOLOTXTByFilename(txtPath)
 
             self.setWindowTitle(__appname__ + ' ' + filePath)
 
@@ -1438,6 +1514,19 @@ class MainWindow(QMainWindow, WindowMixin):
         print (shapes)
         self.loadLabels(shapes)
         self.canvas.verified = tYoloParseReader.verified
+        
+    def loadYOLOTOBBXTByFilename(self, txtPath):
+        if self.filePath is None:
+            return
+        if os.path.isfile(txtPath) is False:
+            return
+
+        self.set_format(FORMAT_YOLO_OBB)
+        tYoloOBBParseReader = YoloOBBReader(txtPath, self.image)
+        shapes = tYoloOBBParseReader.getShapes()
+        print (shapes)
+        self.loadOBBLabels(shapes)
+        self.canvas.verified = tYoloOBBParseReader.verified
 
     def togglePaintLabelsOption(self):
         for shape in self.canvas.shapes:
