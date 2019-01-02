@@ -1476,6 +1476,9 @@ def get_main_app(argv=[]):
     win.show()
     return app, win
 
+# To restore PyQt4 behaviour of printing the traceback to stdout/stderr
+def except_hook(cls, exception, traceback):
+    sys.__excepthook__(cls, exception, traceback)
 
 def main():
     '''construct main app and run it'''
@@ -1483,4 +1486,6 @@ def main():
     return app.exec_()
 
 if __name__ == '__main__':
+    import sys
+    sys.excepthook = except_hook
     sys.exit(main())
