@@ -711,6 +711,8 @@ class Canvas(QWidget):
     def loadShapes(self, shapes):
         self.shapes = list(shapes)
         self.current = None
+        for s in shapes:
+            s.updateOBBInfo()
         self.repaint()
 
     def setShapeVisible(self, shape, value):

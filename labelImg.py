@@ -1513,7 +1513,6 @@ class MainWindow(QMainWindow, WindowMixin):
         shapes = tYoloParseReader.getShapes()
         print (shapes)
         self.loadLabels(shapes)
-        self.canvas.verified = tYoloParseReader.verified
         
     def loadYOLOTOBBXTByFilename(self, txtPath):
         if self.filePath is None:
