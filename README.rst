@@ -15,7 +15,7 @@ It is written in Python and uses Qt for its graphical interface.
 Annotations are saved as XML files in PASCAL VOC format, the format used
 by `ImageNet <http://www.image-net.org/>`__.  Besdies, it also supports YOLO and YOLO OBB format
 
-.. image:: https://raw.githubusercontent.com/heshameraqi/labelImg/master/demo/demo6.jpg
+.. image:: https://raw.githubusercontent.com/heshameraqi/labelImg/master/demo/demo6.png
      :alt: Demo Image
 
 .. image:: https://raw.githubusercontent.com/heshameraqi/labelImg/master/demo/demo3.jpg
