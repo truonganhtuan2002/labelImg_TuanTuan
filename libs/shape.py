@@ -248,9 +248,17 @@ class Shape(object):
             if (np.argmax([val1, val2]) == 0): # Height is point[0] to point[1]
                 self.angle = math.degrees( math.atan2( math.fabs(self.points[0].y()-self.points[1].y()), 
                                                        math.fabs(self.points[0].x()-self.points[1].x()) ) )
+                # Check if box is slanted like West-North to East-South
+                larger_x_point_id = np.argmax([self.points[0].x(), self.points[1].x()])
+                if (    self.points[larger_x_point_id].y()>self.points[1 if (larger_x_point_id==0) else 0].y()   ):
+                    self.angle = -self.angle
             else: # Height is point[1] to point[2]
                 self.angle = math.degrees( math.atan2( math.fabs(self.points[1].y()-self.points[2].y()), 
                                                        math.fabs(self.points[1].x()-self.points[2].x()) ) )
+                # Check if box is slanted like West-North to East-South
+                larger_x_point_id = np.argmax([self.points[1].x(), self.points[2].x()]) + 1
+                if (    self.points[larger_x_point_id].y()>self.points[2 if (larger_x_point_id==1) else 1].y()   ):
+                    self.angle = -self.angle
     
     def updatePointsFromOBBInfo(self, canvas_width, canvas_height):
         p = []

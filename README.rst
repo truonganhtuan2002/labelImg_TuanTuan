@@ -13,7 +13,10 @@ LabelImg_OBB is a fork that adds the oriented bounding boxes (OBB) feature.
 It is written in Python and uses Qt for its graphical interface.
 
 Annotations are saved as XML files in PASCAL VOC format, the format used
-by `ImageNet <http://www.image-net.org/>`__.  Besdies, it also supports YOLO format
+by `ImageNet <http://www.image-net.org/>`__.  Besdies, it also supports YOLO and YOLO OBB format
+
+.. image:: https://raw.githubusercontent.com/tzutalin/labelImg/master/demo/demo6.jpg
+     :alt: Demo Image
 
 .. image:: https://raw.githubusercontent.com/tzutalin/labelImg/master/demo/demo3.jpg
      :alt: Demo Image
@@ -187,7 +190,7 @@ The annotation will be saved to the folder you specify.
 
 You can refer to the below hotkeys to speed up your workflow.
 
-Steps (YOLO)
+Steps (YOLO or YOLO_OBB)
 ~~~~~
 
 1. In ``data/predefined_classes.txt`` define the list of classes that will be used for your training.
