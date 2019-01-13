@@ -15,13 +15,13 @@ It is written in Python and uses Qt for its graphical interface.
 Annotations are saved as XML files in PASCAL VOC format, the format used
 by `ImageNet <http://www.image-net.org/>`__.  Besdies, it also supports YOLO and YOLO OBB format
 
-.. image:: https://raw.githubusercontent.com/tzutalin/labelImg/master/demo/demo6.jpg
+.. image:: https://raw.githubusercontent.com/heshameraqi/labelImg/master/demo/demo6.jpg
      :alt: Demo Image
 
-.. image:: https://raw.githubusercontent.com/tzutalin/labelImg/master/demo/demo3.jpg
+.. image:: https://raw.githubusercontent.com/heshameraqi/labelImg/master/demo/demo3.jpg
      :alt: Demo Image
 
-.. image:: https://raw.githubusercontent.com/tzutalin/labelImg/master/demo/demo.jpg
+.. image:: https://raw.githubusercontent.com/heshameraqi/labelImg/master/demo/demo.jpg
      :alt: Demo Image
 
 `Watch a demo video <https://youtu.be/p0nR2YsCY_U>`__
