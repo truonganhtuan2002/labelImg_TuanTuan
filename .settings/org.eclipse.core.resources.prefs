@@ -1,8 +1,0 @@
-eclipse.preferences.version=1
-encoding//libs/shape.py=utf-8
-encoding//libs/stringBundle.py=utf-8
-encoding//libs/yolo_io.py=utf8
-encoding//libs/yolo_obb_io.py=utf8
-encoding/labelImg.py=utf-8
-encoding/resources.py=utf-8
-encoding/setup.py=utf-8

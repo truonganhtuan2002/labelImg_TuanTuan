@@ -1109,7 +1109,7 @@ class MainWindow(QMainWindow, WindowMixin):
                 elif os.path.isfile(txtPath):
                     with open(txtPath) as f:
                         first_line = f.readline()
-                        if (first_line == "YOLO_OBB"):
+                        if (first_line == "YOLO_OBB\n"):
                             self.loadYOLOTOBBXTByFilename(txtPath)
                         else:
                             self.loadYOLOTXTByFilename(txtPath)
