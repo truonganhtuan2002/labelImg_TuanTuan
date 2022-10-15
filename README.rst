@@ -60,7 +60,7 @@ Python 3 + Qt5
 
 .. code::
 
-    sudo apt-get install pyqt5-dev-tools
+    sudo apt-get install pyqt5-dev-tools python3-pip python3-examples python3-tk
     sudo pip3 install -r requirements/requirements-linux-python3.txt
     make qt5py3
     python3 labelImg.py
