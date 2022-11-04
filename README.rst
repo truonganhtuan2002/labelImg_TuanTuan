@@ -12,7 +12,7 @@ LabelImg is a graphical image annotation tool. LabelImg_OBB is a fork that adds 
         **Used to annotate the date in this Work:**
         Hesham M. Eraqi et al. Automatic Roadway Features Detection with Oriented Object Detection. Journal of Intelligent Transportation Systems. Applied Sciences (ISSN 2076-3417), 11(8), 2021.
 
-Dataset download link: https://drive.google.com/file/d/1N3Q8Rehgyxjc7wwpKR3UA9MXndhs80o0/view?usp=sharing
+        Dataset download link: https://drive.google.com/file/d/1N3Q8Rehgyxjc7wwpKR3UA9MXndhs80o0/
 
 It is written in Python and uses Qt for its graphical interface.
 
