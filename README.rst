@@ -7,10 +7,11 @@ LabelImg_OBB
 .. image:: https://img.shields.io/travis/tzutalin/labelImg.svg
         :target: https://travis-ci.org/tzutalin/labelImg
 
-LabelImg is a graphical image annotation tool. LabelImg_OBB is a fork that adds the oriented bounding boxes (OBB) feature.
+LabelImg is a graphical image annotation tool. In this LabelImg_OBB fork, mouse right clicks can be used to rotate objects to annotate oriented bounding boxes (OBB).
 
         **Used to annotate the date used in this work:**
         Hesham M. Eraqi et al. Automatic Roadway Features Detection with Oriented Object Detection. Journal of Intelligent Transportation Systems. Applied Sciences (ISSN 2076-3417), 11(8), 2021.
+        https://www.mdpi.com/2076-3417/11/8/3531
 
         Dataset download link: https://drive.google.com/file/d/1N3Q8Rehgyxjc7wwpKR3UA9MXndhs80o0/
 
