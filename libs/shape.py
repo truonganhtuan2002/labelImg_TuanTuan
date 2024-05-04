@@ -143,7 +143,14 @@ class Shape(object):
                     self.label = ""
                 if(min_y < MIN_Y_LABEL):
                     min_y += MIN_Y_LABEL
-                painter.drawText(min_x, min_y, "h={0:.1f}, w={1:.1f} , \u03F4={2:.1f}".format(self.height, self.width, self.angle))
+                from PyQt5.QtCore import QPointF
+
+                # Chuyển min_x và min_y thành một điểm
+                point = QPointF(min_x, min_y)
+
+                # Sử dụng điểm để vẽ văn bản
+                painter.drawText(point, "h={0:.1f}, w={1:.1f} , \u03F4={2:.1f}".format(self.height, self.width, self.angle))
+
 
             # Draw text at the top-left
             if self.paintLabel:
@@ -187,7 +194,10 @@ class Shape(object):
             
     def drawOrigin(self, path):
         d = self.point_size / self.scale
-        path.addEllipse(QPoint(self.origin[0], self.origin[1]), d / 2.0, d / 2.0)
+        origin_x = int(self.origin[0])  # Chuyển đổi tọa độ x thành số nguyên
+        origin_y = int(self.origin[1])  # Chuyển đổi tọa độ y thành số nguyên
+        path.addEllipse(QPoint(origin_x, origin_y), d / 2.0, d / 2.0)
+
 
     def nearestVertex(self, point, epsilon):
         for i, p in enumerate(self.points):
